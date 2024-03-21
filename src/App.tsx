@@ -1,16 +1,41 @@
+/* eslint-disable react/button-has-type */
+/* eslint-disable react/function-component-definition */
 import { useState } from "react";
 
-const App = () => {
-  const [fontSize, setFontSize] = useState(12);
+function Square() {
+  const [value, setValue] = useState(null);
+  function handleClick() {
+    setValue("X");
+  }
 
   return (
+    <button
+      className="square"
+      onClick={handleClick}
+    >
+      {value}
+    </button>
+  );
+}
+
+export default function Board() {
+  return (
     <>
-      <div style={{ fontSize }}>This is my test React project.</div>
-      <button type="button" onClick={() => setFontSize(fontSize + 5)}>
-        Increase font size!
-      </button>
+      <div className="boardRow">
+        <Square />
+        <Square />
+        <Square />
+      </div>
+      <div className="boardRow">
+        <Square />
+        <Square />
+        <Square />
+      </div>
+      <div className="boardRow">
+        <Square />
+        <Square />
+        <Square />
+      </div>
     </>
   );
-};
-
-export default App;
+}
