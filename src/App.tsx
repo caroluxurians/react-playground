@@ -1,22 +1,31 @@
-/* eslint-disable react/button-has-type */
-/* eslint-disable react/function-component-definition */
 import { useState } from "react";
 
-function Square({ value, onSquareClick }) {
+type SquareProps = {
+  value: string
+  onSquareClick: () => void
+};
+
+const Square = ({ value, onSquareClick }: SquareProps) => {
   return (
-    <button className="square" onClick={onSquareClick}>
+    <button type="button" className="square" onClick={onSquareClick}>
       {value}
     </button>
   );
-}
+};
 
-export default function Board() {
+const Board = () => {
+  const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState(Array(9).fill(null));
 
-  function handleClick(i) {
+  function handleClick(i: number) {
     const nextSquares = squares.slice();
-    nextSquares[i] = "X";
+    if (xIsNext) {
+      nextSquares[i] = "X";
+    } else {
+      nextSquares[i] = "O";
+    }
     setSquares(nextSquares);
+    setXIsNext(!xIsNext);
   }
 
   return (
@@ -38,4 +47,6 @@ export default function Board() {
       </div>
     </>
   );
-}
+};
+
+export default Board;
