@@ -61,6 +61,19 @@ const Board = () => {
   );
 };
 
+const Game = () => {
+  return (
+    <div className="game">
+      <div className="gameBoard">
+        <Board />
+      </div>
+      <div className="gameInfo">
+        <ol>{/* TODO */}</ol>
+      </div>
+    </div>
+  );
+};
+
 const calculateWinner = (squares) => {
   const lines = [
     [0, 1, 2],
@@ -81,4 +94,4 @@ const calculateWinner = (squares) => {
   return null;
 };
 
-export default Board;
+export default Game;
