@@ -68,7 +68,8 @@ const Game = () => {
   const currentSquares = history[history.length - 1];
 
   const handlePlay = (nextSquares) => {
-    // TODO;
+    setHistory([...history, nextSquares]);
+    setXIsNext(!xIsNext);
   };
 
   return (
