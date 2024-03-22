@@ -4,6 +4,11 @@ type SquareProps = {
   value: string
   onSquareClick: () => void
 };
+type BoardProps = {
+  xIsNext: boolean
+  squares: Array
+  onPlay: () => void
+};
 
 const Square = ({ value, onSquareClick }: SquareProps) => {
   return (
@@ -13,11 +18,8 @@ const Square = ({ value, onSquareClick }: SquareProps) => {
   );
 };
 
-const Board = () => {
-  const [xIsNext, setXIsNext] = useState(true);
-  const [squares, setSquares] = useState(Array(9).fill(null));
-
-  function handleClick(i: number) {
+const Board = ({ xIsNext, squares, onPlay }: BoardProps) => {
+  const handleClick = (i: number) => {
     if (squares[i] || calculateWinner(squares)) {
       return;
     }
@@ -27,8 +29,7 @@ const Board = () => {
     } else {
       nextSquares[i] = "O";
     }
-    setSquares(nextSquares);
-    setXIsNext(!xIsNext);
+    onPlay(nextSquares);
   }
 
   const winner = calculateWinner(squares);
@@ -62,10 +63,18 @@ const Board = () => {
 };
 
 const Game = () => {
+  const [xIsNext, setXIsNext] = useState(true);
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const currentSquares = history[history.length - 1];
+
+  const handlePlay = (nextSquares) => {
+    // TODO;
+  };
+
   return (
     <div className="game">
       <div className="gameBoard">
-        <Board />
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="gameInfo">
         <ol>{/* TODO */}</ol>
