@@ -100,7 +100,9 @@ const Game = () => {
 
   const moves = history.map((squares, move) => {
     let description;
-    if (move > 0) {
+    if (move === currentMove) {
+      description = `You are at move #${move}`;
+    } else if (move > 0) {
       description = `Go to move #${move}`;
     } else {
       description = "Go to game start";
@@ -108,7 +110,11 @@ const Game = () => {
     return (
       // eslint-disable-next-line react/no-array-index-key
       <li key={move}>
-        <button type="button" onClick={() => jumpTo(move)}>{description}</button>
+        {move === currentMove ? (
+          <span>{description}</span>
+        ) : (
+          <button type="button" onClick={() => jumpTo(move)}>{description}</button>
+        )}
       </li>
     );
   });
@@ -119,7 +125,7 @@ const Game = () => {
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="gameInfo">
-        <ol>{moves}</ol>
+        <ul>{moves}</ul>
       </div>
     </div>
   );
