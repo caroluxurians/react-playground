@@ -60,23 +60,30 @@ const Board = ({ xIsNext, squares, onPlay }: BoardProps) => {
     status = `Next player: ${xIsNext ? "X" : "O"}`;
   }
 
+  const rowCount = 3;
+  const colCount = 3;
+
   return (
     <>
       <div className="status">{status}</div>
-      <div className="boardRow">
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
-      </div>
-      <div className="boardRow">
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
-      </div>
-      <div className="boardRow">
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+      <div>
+        {[...new Array(rowCount)].map((row, rowIndex) => {
+          return (
+            // eslint-disable-next-line react/no-array-index-key
+            <div className="boardRow" key={rowIndex}>
+              {[...new Array(colCount)].map((col, colIndex) => {
+                const squareIndex = rowIndex * rowCount + colIndex;
+                return (
+                  <Square
+                    key={squareIndex}
+                    value={squares[squareIndex]}
+                    onSquareClick={() => handleClick(squareIndex)}
+                  />
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
     </>
   );
