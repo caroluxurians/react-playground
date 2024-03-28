@@ -12,6 +12,9 @@ module.exports = {
     "@typescript-eslint/quotes": ["error", "double"],
     "react/jsx-filename-extension": [1, { "extensions": [".tsx"] }],
     "react/react-in-jsx-scope": "off",
+    "react/require-default-props": ["error", {
+      "functions": "defaultArguments",
+    }],
     "react/function-component-definition": [
       "error",
       {

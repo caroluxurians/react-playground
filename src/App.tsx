@@ -3,6 +3,8 @@ import { useState } from "react";
 type SquareProps = {
   value: string
   onSquareClick: () => void
+  winningLines: number[] | undefined
+  squareIndex: number
 };
 type BoardProps = {
   xIsNext: boolean
@@ -24,15 +26,26 @@ const calculateWinner = (squares: string[]) => {
   for (let i = 0; i < lines.length; i += 1) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return {
+        winner: squares[a],
+        lines: [a, b, c],
+      };
     }
   }
   return null;
 };
 
-const Square = ({ value, onSquareClick }: SquareProps) => {
+const Square = ({
+  value, onSquareClick, winningLines, squareIndex,
+}: SquareProps) => {
   return (
-    <button type="button" className="square" onClick={onSquareClick}>
+    <button
+      type="button"
+      className={winningLines?.includes(squareIndex)
+        ? "squareWin"
+        : "square"}
+      onClick={onSquareClick}
+    >
       {value}
     </button>
   );
@@ -52,10 +65,12 @@ const Board = ({ xIsNext, squares, onPlay }: BoardProps) => {
     onPlay(nextSquares);
   };
 
-  const winner = calculateWinner(squares);
+  const winner = calculateWinner(squares)?.winner;
+  const lines = calculateWinner(squares)?.lines;
   let status;
   if (winner) {
     status = `Winner: ${winner}`;
+    // tady??
   } else {
     status = `Next player: ${xIsNext ? "X" : "O"}`;
   }
@@ -77,7 +92,9 @@ const Board = ({ xIsNext, squares, onPlay }: BoardProps) => {
                   <Square
                     key={squareIndex}
                     value={squares[squareIndex]}
+                    squareIndex={squareIndex}
                     onSquareClick={() => handleClick(squareIndex)}
+                    winningLines={lines}
                   />
                 );
               })}
