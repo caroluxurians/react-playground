@@ -12,6 +12,13 @@ type BoardProps = {
   onPlay: (squares: string[]) => void
 };
 
+const checkIfDraw = (squares: string[]) => {
+  const isDraw = false;
+  if (!squares.find((value) => value === null)) {
+    return !isDraw;
+  }
+};
+
 const calculateWinner = (squares: string[]) => {
   const lines = [
     [0, 1, 2],
@@ -67,10 +74,12 @@ const Board = ({ xIsNext, squares, onPlay }: BoardProps) => {
 
   const winner = calculateWinner(squares)?.winner;
   const lines = calculateWinner(squares)?.lines;
+  const draw = checkIfDraw(squares);
   let status;
   if (winner) {
     status = `Winner: ${winner}`;
-    // tady??
+  } else if (draw) {
+    status = "It's a draw!";
   } else {
     status = `Next player: ${xIsNext ? "X" : "O"}`;
   }
