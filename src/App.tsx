@@ -94,6 +94,7 @@ const Game = () => {
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
+  const [ascending, setAscending] = useState(false);
 
   const handlePlay = (nextSquares: string[]) => {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
@@ -132,7 +133,8 @@ const Game = () => {
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="gameInfo">
-        <ul>{moves}</ul>
+        <button type="button" className="toggleButton" onClick={() => setAscending(!ascending)}>toggle</button>
+        <ol>{!ascending ? moves : moves.reverse()}</ol>
       </div>
     </div>
   );
