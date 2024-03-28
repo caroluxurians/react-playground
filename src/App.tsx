@@ -13,10 +13,7 @@ type BoardProps = {
 };
 
 const checkIfDraw = (squares: string[]) => {
-  const isDraw = false;
-  if (!squares.find((value) => value === null)) {
-    return !isDraw;
-  }
+  return squares.every((value) => value !== null);
 };
 
 const calculateWinner = (squares: string[]) => {
@@ -43,14 +40,16 @@ const calculateWinner = (squares: string[]) => {
 };
 
 const Square = ({
-  value, onSquareClick, winningLines, squareIndex,
+  value, onSquareClick, winningLines, squareIndex, isDraw,
 }: SquareProps) => {
   return (
     <button
       type="button"
-      className={winningLines?.includes(squareIndex)
-        ? "squareWin"
-        : "square"}
+      className={
+        winningLines?.includes(squareIndex)
+          ? "squareWin"
+          : (isDraw ? "squareDraw" : "square")
+      }
       onClick={onSquareClick}
     >
       {value}
@@ -74,11 +73,16 @@ const Board = ({ xIsNext, squares, onPlay }: BoardProps) => {
 
   const winner = calculateWinner(squares)?.winner;
   const lines = calculateWinner(squares)?.lines;
-  const draw = checkIfDraw(squares);
+
+  // const [isDraw, setIsDraw] = useState(false);
+  // const result = checkIfDraw(squares);
+  // if (result !== isDraw) setIsDraw(result);
+  const isDraw = checkIfDraw(squares);
+
   let status;
   if (winner) {
     status = `Winner: ${winner}`;
-  } else if (draw) {
+  } else if (isDraw) {
     status = "It's a draw!";
   } else {
     status = `Next player: ${xIsNext ? "X" : "O"}`;
@@ -104,6 +108,7 @@ const Board = ({ xIsNext, squares, onPlay }: BoardProps) => {
                     squareIndex={squareIndex}
                     onSquareClick={() => handleClick(squareIndex)}
                     winningLines={lines}
+                    isDraw={isDraw}
                   />
                 );
               })}
