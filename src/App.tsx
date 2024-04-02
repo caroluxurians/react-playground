@@ -5,11 +5,14 @@ type SquareProps = {
   onSquareClick: () => void
   winningLines: number[] | undefined
   squareIndex: number
+  isDraw: boolean
 };
 type BoardProps = {
   xIsNext: boolean
   squares: string[]
   onPlay: (squares: string[]) => void
+  colCount: number
+  rowCount: number
 };
 
 const checkIfDraw = (squares: string[]) => {
@@ -46,6 +49,7 @@ const Square = ({
     <button
       type="button"
       className={
+        // eslint-disable-next-line no-nested-ternary
         winningLines?.includes(squareIndex)
           ? "squareWin"
           : (isDraw ? "squareDraw" : "square")
@@ -57,7 +61,9 @@ const Square = ({
   );
 };
 
-const Board = ({ xIsNext, squares, onPlay }: BoardProps) => {
+const Board = ({
+  xIsNext, squares, onPlay, colCount, rowCount,
+}: BoardProps) => {
   const handleClick = (i: number) => {
     if (squares[i] || calculateWinner(squares)) {
       return;
@@ -87,9 +93,6 @@ const Board = ({ xIsNext, squares, onPlay }: BoardProps) => {
   } else {
     status = `Next player: ${xIsNext ? "X" : "O"}`;
   }
-
-  const rowCount = 3;
-  const colCount = 3;
 
   return (
     <>
@@ -121,6 +124,9 @@ const Board = ({ xIsNext, squares, onPlay }: BoardProps) => {
 };
 
 const Game = () => {
+  const rowCount = 3;
+  const colCount = 3;
+
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
@@ -137,12 +143,20 @@ const Game = () => {
     setCurrentMove(nextMove);
   };
 
-  const moves = history.map((squares, move) => {
+  const moves = history.map((_, move) => {
+    const curhist = history[move];
+    const prevhist = history[move - 1];
+    if (!prevhist) {
+      return null;
+    }
+    const changedSqIndex = curhist.findIndex((el, index) => prevhist[index] !== el);
     let description;
+    const col = 1 + (changedSqIndex % colCount);
+    const row = 1 + Math.floor(changedSqIndex / rowCount);
     if (move === currentMove) {
       description = `You are at move #${move}`;
     } else if (move > 0) {
-      description = `Go to move #${move}`;
+      description = `Go to move #${move} (${row}, ${col})`;
     } else {
       description = "Go to game start";
     }
@@ -161,7 +175,13 @@ const Game = () => {
   return (
     <div className="game">
       <div className="gameBoard">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+        <Board
+          xIsNext={xIsNext}
+          squares={currentSquares}
+          onPlay={handlePlay}
+          colCount={colCount}
+          rowCount={rowCount}
+        />
       </div>
       <div className="gameInfo">
         <button type="button" className="toggleButton" onClick={() => setAscending(!ascending)}>toggle</button>
